@@ -2,6 +2,7 @@ package tc.oc.pgm.flag;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import javax.annotation.Nullable;
 import org.bukkit.ChatColor;
@@ -38,6 +39,7 @@ import tc.oc.pgm.flag.state.BaseState;
 import tc.oc.pgm.flag.state.Captured;
 import tc.oc.pgm.flag.state.Completed;
 import tc.oc.pgm.flag.state.Returned;
+import tc.oc.pgm.flag.state.Spawned;
 import tc.oc.pgm.flag.state.State;
 import tc.oc.pgm.goals.TouchableGoal;
 import tc.oc.pgm.goals.events.GoalCompleteEvent;
@@ -195,6 +197,17 @@ public class Flag extends TouchableGoal<FlagDefinition> implements Listener {
 
   public ItemStack getBannerItem() {
     return bannerItem;
+  }
+
+  public BaseState getState() {
+    return state;
+  }
+
+  /** Physical location of the flag, if any */
+  public Optional<Location> getLocation() {
+    return state instanceof Spawned
+        ? Optional.of(((Spawned) state).getLocation())
+        : Optional.empty();
   }
 
   /** Owner is defined in XML, and does not change during a match */
