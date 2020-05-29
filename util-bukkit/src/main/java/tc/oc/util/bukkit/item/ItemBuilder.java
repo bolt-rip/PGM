@@ -41,11 +41,6 @@ public class ItemBuilder {
     return meta;
   }
 
-  public ItemStack build() {
-    stack.setItemMeta(meta);
-    return stack;
-  }
-
   public ItemBuilder material(Material material) {
     stack.setType(material);
     return this;
