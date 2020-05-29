@@ -1,0 +1,7 @@
+name: PGM
+description: ${description}
+main: ${project.pluginClass}
+softdepend: ${project.pluginSoftDepedencies}
+version: ${version}-${git.commit.id.abbrev}
+website: ${url}
+author: ${project.author}

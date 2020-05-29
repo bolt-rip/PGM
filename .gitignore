@@ -1,0 +1,55 @@
+# Maven generated files
+target/
+dependency-reduced-pom.xml
+
+# Mac OSX generated files
+.DS_Store
+
+# Eclipse generated files
+.classpath
+.project
+.settings
+
+# IntelliJ IDEA
+.idea
+*.iml
+
+# Vim generated files
+*~
+*.swp
+
+# XCode 3 and 4 generated files
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.pbxuser
+*.xcworkspace
+xcuserdata
+*class
+
+# Minecraft generated files
+banned-ips.json
+banned-players.json
+ops.json
+help.yml
+server.properties
+sportpaper.yml
+update
+usercache.json
+whitelist.json
+logs/
+plugins/
+world/
+world_nether/
+world_the_end/
+wepif.yml
+crash-reports/
+eula.txt
+
+# PGM generated files
+match-*/
+maps.zip
+maps/
+

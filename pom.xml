@@ -1,0 +1,102 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.author>Ashcon Partovi</project.author>
+    </properties>
+
+    <name>PGM</name>
+    <description>The original PvP Game Manager for Minecraft</description>
+    <inceptionYear>2011</inceptionYear>
+
+    <url>https://github.com/Electroid/PGM</url>
+    <scm>
+        <connection>scm:git:git://github.com/Electroid/PGM</connection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>${project.author}</name>
+        </developer>
+    </developers>
+
+    <groupId>tc.oc.pgm</groupId>
+    <artifactId>PGM</artifactId>
+    <version>0.8-Yoyo-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>util</module>
+        <module>util-bukkit</module>
+        <module>core</module>
+        <module>server</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>ashcon-repo</id>
+            <url>https://repo.ashcon.app/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>viaversion-repo</id>
+            <url>https://repo.ashcon.app/content/repositories/viaversion</url>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+      <repository>
+        <id>stratus-plugins</id>
+        <name>Stratus Plugins</name>
+        <url>https://repo.stratus.network:8081/repository/plugins/</url>
+      </repository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+            </plugin>
+
+            <!-- Exposes git information to the build environment -->
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+                </configuration>
+            </plugin>
+
+            <!-- Modifies code to be properly formatted with Google's code style -->
+            <plugin>
+                <groupId>com.coveo</groupId>
+                <artifactId>fmt-maven-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <style>google</style>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>format</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
