@@ -76,6 +76,8 @@ public class LegacyFlagBeamMatchModule implements MatchModule, Listener {
       return;
     }
 
+    flags.put(flag, new Beam(flag, player.getBukkit()));
+
     beams.put(player, flags);
   }
 
