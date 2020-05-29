@@ -27,8 +27,3 @@ jobs:
         MAVEN_REPO_USER: ${{ secrets.MAVEN_REPO_USER }}
         MAVEN_REPO_PASS: ${{ secrets.MAVEN_REPO_PASS }}
         MAVEN_REPO_URL: ${{ secrets.MAVEN_REPO_URL }}
-    - name: artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: PGM.jar
-        path: target/PGM.jar

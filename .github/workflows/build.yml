@@ -22,8 +22,3 @@ jobs:
           ${{ runner.os }}-maven-
     - name: build
       run: mvn install
-    - name: artifact
-      uses: actions/upload-artifact@v1
-      with:
-        name: PGM.jar
-        path: target/PGM.jar
