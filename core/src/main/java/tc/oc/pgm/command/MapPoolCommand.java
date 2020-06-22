@@ -199,8 +199,8 @@ public final class MapPoolCommand {
   @Command(
       aliases = {"setpool", "setrot"},
       desc = "Change the map pool",
-      usage = "[pool name] -r (revert to dynamic) -t (time limit for map pool)",
-      flags = "r",
+      usage = "[pool name] -r (revert to dynamic) -t (time limit for map pool) -m (match # limit)",
+      flags = "rtm",
       perms = Permissions.SETNEXT)
   public void setPool(
       Audience sender,
@@ -209,7 +209,8 @@ public final class MapPoolCommand {
       MapOrder mapOrder,
       @Nullable String poolName,
       @Switch('r') boolean reset,
-      @Switch('t') Duration timeLimit)
+      @Switch('t') Duration timeLimit,
+      @Switch('m') Integer matchLimit)
       throws CommandException {
     if (!match.getCountdown().getAll(CycleCountdown.class).isEmpty()) {
       sender.sendMessage(TranslatableComponent.of("admin.setPool.activeCycle", TextColor.RED));
@@ -232,7 +233,9 @@ public final class MapPoolCommand {
                 TextComponent.of(newPool.getName(), TextColor.LIGHT_PURPLE)));
         return;
       }
-      mapPoolManager.updateActiveMapPool(newPool, match, true, source, timeLimit);
+
+      mapPoolManager.updateActiveMapPool(
+          newPool, match, true, source, timeLimit, matchLimit != null ? matchLimit : 0);
     }
   }
 
@@ -275,7 +278,11 @@ public final class MapPoolCommand {
 
   @Command(aliases = "votenext", desc = "Vote for the next map", usage = "map")
   public static void voteNext(
-      MatchPlayer player, CommandSender sender, MapOrder mapOrder, @Text MapInfo map)
+      MatchPlayer player,
+      CommandSender sender,
+      MapOrder mapOrder,
+      @Switch('o') boolean forceOpen,
+      @Text MapInfo map)
       throws CommandException {
     MapPool pool = getMapPoolManager(sender, mapOrder).getActiveMapPool();
     MapPoll poll = pool instanceof VotingPool ? ((VotingPool) pool).getCurrentPoll() : null;
@@ -291,7 +298,7 @@ public final class MapPoolCommand {
             voteResult ? TextColor.GREEN : TextColor.RED,
             map.getStyledName(MapNameStyle.COLOR));
     player.sendMessage(voteAction);
-    poll.sendBook(player);
+    poll.sendBook(player, forceOpen);
   }
 
   public static MapPoolManager getMapPoolManager(CommandSender sender, MapOrder mapOrder)
