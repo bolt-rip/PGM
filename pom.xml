@@ -12,7 +12,7 @@
     <description>The original PvP Game Manager for Minecraft.</description>
     <inceptionYear>2011</inceptionYear>
 
-    <url>https://github.com/StratusNetwork/PGM</url>
+    <url>https://github.com/bolt-rip/PGM</url>
 
     <developers>
         <developer>
@@ -21,9 +21,22 @@
         </developer>
     </developers>
 
+	<scm>
+		<connection>scm:git:git://github.com/bolt-rip/pgm.git</connection>
+		<developerConnection>scm:git:git@github.com:bolt-rip/pgm.git</developerConnection>
+		<url>https://github.com/bolt-rip/pgm</url>
+	</scm>
+
+    <distributionManagement>
+		<repository>
+			<id>bolt-rip-public</id>
+			<url>https://repo.repsy.io/mvn/boltrip/public</url>
+		</repository>
+	</distributionManagement>
+
     <groupId>tc.oc.pgm</groupId>
     <artifactId>PGM</artifactId>
-    <version>0.9-Stratus-SNAPSHOT</version>
+    <version>0.9-bolt-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -47,14 +60,6 @@
             <url>https://repo.ashcon.app/content/repositories/snapshots</url>
         </repository>
     </repositories>
-
-    <distributionManagement>
-        <repository>
-            <id>stratus-plugins</id>
-            <name>Stratus Plugins</name>
-            <url>https://repo.stratus.network:8081/repository/plugins/</url>
-          </repository>
-    </distributionManagement>
 
     <dependencies>
         <!-- Fork of Spigot and SportBukkit running Minecraft 1.8 -->
