@@ -79,8 +79,10 @@ public class ChatDispatcher implements Listener {
   private static final String AC_FORMAT =
       TextTranslations.translateLegacy(ADMIN_CHAT_PREFIX, null) + PREFIX_FORMAT;
 
-  private static final Predicate<MatchPlayer> AC_FILTER =
-      viewer -> viewer.getBukkit().hasPermission(Permissions.ADMINCHAT);
+  private static final Predicate<MatchPlayer> AC_MESSAGES_FILTER =
+      viewer -> viewer.getBukkit().hasPermission(Permissions.ADMINCHAT_MESSAGES);
+  private static final Predicate<MatchPlayer> AC_BROADCASTS_FILTER =
+      viewer -> viewer.getBukkit().hasPermission(Permissions.ADMINCHAT_BROADCASTS);
 
   public ChatDispatcher() {
     this.manager = PGM.get().getMatchManager();
@@ -99,7 +101,7 @@ public class ChatDispatcher implements Listener {
   }
 
   public boolean isMuted(MatchPlayer player) {
-    return player != null ? muted.containsKey(player.getId()) : false;
+    return player != null && muted.containsKey(player.getId());
   }
 
   public Set<UUID> getMutedUUIDs() {
@@ -138,7 +140,7 @@ public class ChatDispatcher implements Listener {
           viewer ->
               party.equals(viewer.getParty())
                   || (viewer.isObserving()
-                      && viewer.getBukkit().hasPermission(Permissions.ADMINCHAT)),
+                      && viewer.getBukkit().hasPermission(Permissions.ADMINCHAT_MESSAGES)),
           SettingValue.CHAT_TEAM);
     }
   }
@@ -147,10 +149,10 @@ public class ChatDispatcher implements Listener {
       aliases = {"a"},
       desc = "Send a message to operators",
       usage = "[message]",
-      perms = Permissions.ADMINCHAT)
+      perms = Permissions.ADMINCHAT_MESSAGES)
   public void sendAdmin(Match match, MatchPlayer sender, @Nullable @Text String message) {
     // If a player managed to send a default message without permissions, reset their chat channel
-    if (sender != null && !sender.getBukkit().hasPermission(Permissions.ADMINCHAT)) {
+    if (sender != null && !sender.getBukkit().hasPermission(Permissions.ADMINCHAT_MESSAGES)) {
       sender.getSettings().resetValue(SettingKey.CHAT);
       SettingKey.CHAT.update(sender);
       sender.sendWarning(TranslatableComponent.of("misc.noPermission"));
@@ -162,13 +164,13 @@ public class ChatDispatcher implements Listener {
         sender,
         message != null ? BukkitUtils.colorize(message) : message,
         AC_FORMAT,
-        AC_FILTER,
+        AC_MESSAGES_FILTER,
         SettingValue.CHAT_ADMIN);
 
     // Play sounds for admin chat
     if (message != null) {
       match.getPlayers().stream()
-          .filter(AC_FILTER) // Initial filter
+          .filter(AC_MESSAGES_FILTER) // Initial filter
           .filter(viewer -> !viewer.equals(sender)) // Don't play sound for sender
           .forEach(pl -> playSound(pl, AC_SOUND));
     }
@@ -222,9 +224,7 @@ public class ChatDispatcher implements Listener {
       }
     }
 
-    if (sender != null) {
-      lastMessagedBy.put(receiver, sender.getId());
-    }
+    lastMessagedBy.put(receiver, sender.getId());
 
     // Send message to receiver
     send(
@@ -297,7 +297,7 @@ public class ChatDispatcher implements Listener {
               message.replace(target, "").substring(1));
         }
       } else if (message.startsWith(ADMIN_CHAT_SYMBOL)
-          && player.getBukkit().hasPermission(Permissions.ADMINCHAT)) {
+          && player.getBukkit().hasPermission(Permissions.ADMINCHAT_MESSAGES)) {
         sendAdmin(player.getMatch(), player, event.getMessage().substring(1));
       } else {
         sendDefault(player.getMatch(), player, event.getMessage());
@@ -352,7 +352,7 @@ public class ChatDispatcher implements Listener {
           .getAsyncExecutor()
           .execute(
               () -> {
-                final Predicate<MatchPlayer> finalFilter = sender.isVanished() ? AC_FILTER : filter;
+                final Predicate<MatchPlayer> finalFilter = sender.isVanished() ? AC_MESSAGES_FILTER : filter;
                 final String finalFormat = sender.isVanished() ? AC_FORMAT : format;
                 final AsyncPlayerChatEvent event =
                     new AsyncPlayerChatEvent(
@@ -424,7 +424,7 @@ public class ChatDispatcher implements Listener {
       Component message, Match match, Optional<Sound> sound) {
     TextComponent formatted = ADMIN_CHAT_PREFIX.append(message);
     match.getPlayers().stream()
-        .filter(AC_FILTER)
+        .filter(AC_BROADCASTS_FILTER)
         .forEach(
             mp -> {
               // If provided a sound, play if setting allows

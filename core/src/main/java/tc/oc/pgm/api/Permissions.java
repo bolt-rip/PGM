@@ -18,7 +18,9 @@ public interface Permissions {
   String START = ROOT + ".start"; // Start and cycle matches
   String STOP = ROOT + ".stop"; // Stop matches and restart the server
   String SETNEXT = ROOT + ".setnext"; // Change the rotation and maps
-  String ADMINCHAT = ROOT + ".adminchat"; // Secret chat with other operators
+  String ADMINCHAT_ROOT = ROOT + ".adminchat"; // Secret chat with other operators
+  String ADMINCHAT_MESSAGES = ADMINCHAT_ROOT + ".messages"; // Can send and see messages
+  String ADMINCHAT_BROADCASTS = ADMINCHAT_ROOT + ".broadcasts"; // Can see broadcasts, for example, setnexted maps
   String GAMEPLAY = ROOT + ".gameplay"; // Edit gameplay such as time limits, destroyables, modes
   String RESIZE = ROOT + ".resize"; // Resize the number of players per match
   String JOIN = ROOT + ".join"; // Allowed to join a match as a participant
@@ -39,6 +41,15 @@ public interface Permissions {
   String VANISH = ROOT + ".vanish"; // Access to /vanish command
 
   String MAPMAKER = GROUP + ".mapmaker"; // Permission group for mapmakers, defined in config.yml
+
+  Permission ADMINCHAT =
+      new Permission(
+          ADMINCHAT_ROOT,
+          PermissionDefault.FALSE,
+          new ImmutableMap.Builder<String, Boolean>()
+            .put(ADMINCHAT_MESSAGES, true)
+            .put(ADMINCHAT_BROADCASTS, true)
+            .build());
 
   // Role-specific permission nodes
   Permission DEFAULT =
@@ -69,7 +80,7 @@ public interface Permissions {
               .put(START, true)
               .put(STOP, true)
               .put(SETNEXT, true)
-              .put(ADMINCHAT, true)
+              .put(ADMINCHAT_ROOT, true)
               .put(RESIZE, true)
               .put(JOIN_FORCE, true)
               .put(DEFUSE, true)
