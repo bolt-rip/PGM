@@ -46,13 +46,17 @@
             <id>ashcon.app</id>
             <url>https://repo.ashcon.app/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>stratus-plugins</id>
+            <url>${env.MAVEN_REPO_URL}</url>
+        </repository>
     </repositories>
 
     <distributionManagement>
         <repository>
             <id>stratus-plugins</id>
             <name>Stratus Plugins</name>
-            <url>https://repo.stratus.network:8081/repository/plugins/</url>
+            <url>${env.MAVEN_REPO_URL}</url>
           </repository>
     </distributionManagement>
 
@@ -60,7 +64,7 @@
         <!-- Fork of Spigot and SportBukkit running Minecraft 1.8 -->
         <!-- TODO: support non-1.8 and non-SportPaper Bukkit servers -->
         <dependency>
-            <groupId>app.ashcon</groupId>
+            <groupId>network.stratus</groupId>
             <artifactId>sportpaper</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>compile</scope> <!-- Remember to exclude in shading -->
