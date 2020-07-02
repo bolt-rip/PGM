@@ -69,6 +69,7 @@ public abstract class Spawning extends Participating {
   public void tick() {
     if (!trySpawn()) {
       updateTitle();
+      sendMessage();
     }
 
     super.tick();
@@ -93,6 +94,10 @@ public abstract class Spawning extends Participating {
     } else {
       return null;
     }
+  }
+
+  public void sendMessage() {
+
   }
 
   public void updateTitle() {

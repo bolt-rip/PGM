@@ -261,6 +261,27 @@ public interface NMSHacks {
         metadata.dataWatcher);
   }
 
+  static void spawnEntity(
+          Player player, int type, int entityId, Location location) {
+    sendPacket(player, spawnEntityPacket(type, entityId, location));
+  }
+
+  static Packet spawnEntityPacket(
+          int type, int entityId, Location location) {
+    return new PacketPlayOutSpawnEntity(
+            entityId,
+            location.getX(),
+            location.getY(),
+            location.getZ(),
+            0,
+            0,
+            0,
+            (int)location.getPitch(),
+            (int)location.getYaw(),
+            type,
+            0);
+  }
+
   static void entityAttach(Player player, int entityID, int vehicleID, boolean leash) {
     sendPacket(player, new PacketPlayOutAttachEntity(entityID, vehicleID, leash));
   }

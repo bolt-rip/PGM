@@ -18,6 +18,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -309,15 +310,33 @@ public class MatchPlayerImpl implements MatchPlayer, PlayerAudience, Comparable<
       if (yes) {
         resetGamemode();
 
-        NMSHacks.EntityMetadata metadata = NMSHacks.createEntityMetadata();
-        NMSHacks.setEntityMetadata(metadata, false, false, false, false, true, (short) 0);
-        NMSHacks.setArmorStandFlags(metadata, false, false, false, false);
-        NMSHacks.spawnLivingEntity(
-            bukkit,
-            EntityType.ARMOR_STAND,
-            FROZEN_VEHICLE_ENTITY_ID,
-            bukkit.getLocation().subtract(0, 1.1, 0),
-            metadata);
+        //For 1.7 players, spawn a wither skull. For 1.8+, spawn an armor stand.
+        if (getProtocolVersion() >= ViaUtils.VERSION_1_8) {
+          NMSHacks.EntityMetadata metadata = NMSHacks.createEntityMetadata();
+          NMSHacks.setEntityMetadata(metadata, false, false, false, false, true, (short) 0);
+          NMSHacks.setArmorStandFlags(metadata, false, false, false, false);
+
+          NMSHacks.spawnLivingEntity(
+                  bukkit,
+                  EntityType.ARMOR_STAND,
+                  FROZEN_VEHICLE_ENTITY_ID,
+                  bukkit.getLocation().subtract(0, 1.1, 0),
+                  metadata);
+
+        } else {
+          //WitherSkulls die in the void, so make sure the player is out of it
+          Location newLocation = bukkit.getLocation().set(bukkit.getLocation().getX(),
+                  Math.max(-50, bukkit.getLocation().getY()),
+                  bukkit.getLocation().getZ());
+          bukkit.teleport(newLocation);
+          NMSHacks.spawnEntity(
+                  bukkit,
+                  66, //WitherSkull
+                  FROZEN_VEHICLE_ENTITY_ID,
+                  newLocation.add(0, 0.286, 0)
+          );
+        }
+
         NMSHacks.entityAttach(bukkit, bukkit.getEntityId(), FROZEN_VEHICLE_ENTITY_ID, false);
       } else {
         NMSHacks.destroyEntities(bukkit, FROZEN_VEHICLE_ENTITY_ID);
