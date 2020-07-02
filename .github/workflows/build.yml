@@ -21,7 +21,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
     - name: build
-      run: mvn install
+      run: mvn install -s settings.xml
+      env:
+        MAVEN_REPO_USER: ${{ secrets.MAVEN_REPO_USER }}
+        MAVEN_REPO_PASS: ${{ secrets.MAVEN_REPO_PASS }}
+        MAVEN_REPO_URL: ${{ secrets.MAVEN_REPO_URL }}
     - name: artifact
       uses: actions/upload-artifact@v1
       with:
