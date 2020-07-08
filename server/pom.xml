@@ -60,7 +60,7 @@
                     <artifactSet>
                         <includes>
                             <include>tc.oc.pgm:core:*</include>
-                            <include>app.ashcon:sportpaper:*</include>
+                            <include>network.stratus:sportpaper:*</include>
                             <include>log4j:log4j:*</include>
                         </includes>
                     </artifactSet>
@@ -72,7 +72,7 @@
                             </excludes>
                         </filter>
                         <filter>
-                            <artifact>app.ashcon:sportpaper:*</artifact>
+                            <artifact>network.stratus:sportpaper:*</artifact>
                             <excludes>
                                 <exclude>META-INF/MANIFEST.MF</exclude>
                             </excludes>

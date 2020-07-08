@@ -17,6 +17,7 @@ import tc.oc.pgm.spawns.SpawnMatchModule;
 import tc.oc.pgm.spawns.SpawnModule;
 import tc.oc.pgm.spawns.events.DeathKitApplyEvent;
 import tc.oc.pgm.util.TimeUtils;
+import tc.oc.pgm.util.bukkit.ViaUtils;
 import tc.oc.pgm.util.nms.NMSHacks;
 
 /** Player is waiting to respawn after dying in-game */
@@ -108,6 +109,23 @@ public class Dead extends Spawning {
     if (player.getMatch().getTick().tick - deathTick
         >= TimeUtils.toTicks(SpawnModule.IGNORE_CLICKS_DELAY)) {
       super.requestSpawn();
+    }
+  }
+
+  @Override
+  public void sendMessage() {
+    //Send a respawning chat message to 1.7 clients
+    if (player.getProtocolVersion() < ViaUtils.VERSION_1_8 &&
+            ((ticksUntilRespawn() > 0 && ticksUntilRespawn() % 20 == 0) || // Send the message every second before the timer runs out
+                    (ticksUntilRespawn() == 0 && options.delayTicks - age() % (20 * 5) == 0))) { //Send the message every 5 seconds after the timer
+      player.sendMessage(
+              (ticksUntilRespawn() > 0 ?
+                      TranslatableComponent.of(
+                              spawnRequested ? "death.respawn.confirmed.time" : "death.respawn.unconfirmed.time",
+                              TextComponent.of((int) (ticksUntilRespawn() / (float) 20), TextColor.AQUA)) :
+                      super.getSubtitle())
+                      .color(TextColor.GREEN)
+      );
     }
   }
 
