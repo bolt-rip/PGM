@@ -22,7 +22,7 @@
         <dependency>
             <groupId>tc.oc.pgm</groupId>
             <artifactId>util</artifactId>
-            <version>0.9-Stratus-SNAPSHOT</version>
+            <version>0.9-bolt-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
