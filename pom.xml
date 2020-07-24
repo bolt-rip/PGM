@@ -65,7 +65,7 @@
         <!-- Fork of Spigot and SportBukkit running Minecraft 1.8 -->
         <!-- TODO: support non-1.8 and non-SportPaper Bukkit servers -->
         <dependency>
-            <groupId>app.ashcon</groupId>
+            <groupId>network.stratus</groupId>
             <artifactId>sportpaper</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>system</scope> <!-- Remember to exclude in shading -->
