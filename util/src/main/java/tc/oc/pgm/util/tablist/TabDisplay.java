@@ -1,6 +1,5 @@
 package tc.oc.pgm.util.tablist;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,9 +24,9 @@ import tc.oc.pgm.util.nms.NMSHacks;
  * the list, and it is assumed that nothing else will make changes to the player's list while
  * TabDisplay is working with it.
  *
- * <p>This class works by filling the list with unique invisible player names consisting of a single
- * formatting code. Each of those players is added to a unique team, and the team prefix and suffix
- * are used to show text in the player's slot in the list.
+ * <p>This class works by filling the list with unique invisible player names consisting of
+ * formatting codes and invisible characters. Each of those players is added to a unique team, and
+ * the team prefix and suffix are used to show text in the player's slot in the list.
  */
 public class TabDisplay {
   // Used as the ping value for all slots
@@ -48,7 +47,7 @@ public class TabDisplay {
   // Cached packets used to setup and tear down the player list
   private final Packet[] teamCreatePackets;
   private final Packet[] teamRemovePackets;
-  private final UUID[] uuids;
+
   private final PacketPlayOutPlayerInfo listAddPacket;
   private final PacketPlayOutPlayerInfo listRemovePacket;
 
@@ -65,34 +64,28 @@ public class TabDisplay {
 
     this.teamCreatePackets = new Packet[this.slots];
     this.teamRemovePackets = new Packet[this.slots];
-    this.uuids = new UUID[this.slots];
 
     this.listAddPacket = new PacketPlayOutPlayerInfo();
+    this.listAddPacket.a = PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER;
+
     this.listRemovePacket = new PacketPlayOutPlayerInfo();
-    listAddPacket.a = PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER;
-    listRemovePacket.a = PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER;
+    this.listRemovePacket.a = PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER;
 
     for (int slot = 0; slot < this.slots; ++slot) {
       BaseComponent[] playerName = this.slotName(slot);
       String name = playerName[0].toLegacyText();
+
       String teamName = this.slotTeamName(slot);
       this.teamCreatePackets[slot] =
           NMSHacks.teamCreatePacket(
               teamName, teamName, "", "", false, false, Collections.singleton(name));
       this.teamRemovePackets[slot] = NMSHacks.teamRemovePacket(teamName);
-      uuids[slot] = UUID.randomUUID();
+      UUID uuid = UUID.randomUUID();
 
       listAddPacket.b.add(
           NMSHacks.playerListPacketData(
-              listAddPacket,
-              uuids[slot],
-              playerName[0].toLegacyText(),
-              GameMode.SURVIVAL,
-              PING,
-              null,
-              playerName));
-      listRemovePacket.b.add(
-          NMSHacks.playerListPacketData(listRemovePacket, uuids[slot], playerName));
+              listAddPacket, uuid, name, GameMode.SURVIVAL, PING, null, playerName));
+      listRemovePacket.b.add(NMSHacks.playerListPacketData(listRemovePacket, uuid, playerName));
     }
 
     this.viewers = new OnlinePlayerMapAdapter<>(new HashMap<Player, String[]>(), plugin);
@@ -117,7 +110,7 @@ public class TabDisplay {
     return y * this.width + x;
   }
 
-  private static final int MAX_COLOR = TextColor.values().length;
+  private static final int MAX_COLORS = TextColor.values().length;
 
   private BaseComponent[] slotName(int slot) {
     // This needs to avoid collision with the sidebar, which uses chars 0-15. Eventually we will add
@@ -126,14 +119,14 @@ public class TabDisplay {
     builder.append(NO_SPACE, TextColor.BLACK); // Avoid collision by adding a 0 on front
 
     do {
-      builder.append(NO_SPACE, TextColor.values()[slot % MAX_COLOR]);
-      slot /= MAX_COLOR;
+      builder.append(NO_SPACE, TextColor.values()[slot % MAX_COLORS]);
+      slot /= MAX_COLORS;
     } while (slot > 0);
     return SpigotTextAdapter.toBungeeCord(builder.build());
   }
 
   private String slotTeamName(int slot) {
-    return "TabDisplay" + slot;
+    return "TabDisplay" + String.format("%03d", slot);
   }
 
   private void set(Player viewer, int slot, String text) {

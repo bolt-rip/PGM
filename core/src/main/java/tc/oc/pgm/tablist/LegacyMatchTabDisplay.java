@@ -38,11 +38,9 @@ import tc.oc.pgm.util.bukkit.ViaUtils;
 import tc.oc.pgm.util.named.NameStyle;
 import tc.oc.pgm.util.tablist.TabDisplay;
 import tc.oc.pgm.util.text.TextTranslations;
+import tc.oc.pgm.util.text.types.PlayerComponent;
 
-/**
- * The pre-1.8 tab list is severely limited. This is essentially a no-op {@link MatchTabView} for
- * pre-1.8 clients.
- */
+/** 1.7 legacy tablist implementation */
 public class LegacyMatchTabDisplay implements Listener {
 
   private static final int WIDTH = 3;
@@ -382,7 +380,9 @@ public class LegacyMatchTabDisplay implements Listener {
         viewer.getBukkit(),
         x,
         y,
-        TextTranslations.translateLegacy(player.getName(NameStyle.LEGACY_TAB), viewer.getBukkit()));
+        TextTranslations.translateLegacy(
+            PlayerComponent.of(player.getBukkit(), NameStyle.LEGACY_TAB, viewer.getBukkit()),
+            viewer.getBukkit()));
     return true;
   }
 
