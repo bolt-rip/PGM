@@ -7,11 +7,11 @@ import org.bukkit.event.HandlerList;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.event.MatchEvent;
 
-public class InitiateMatchStartCountdown extends MatchEvent {
+public class InitiateMatchStartCountdownEvent extends MatchEvent {
 
   private final Duration duration;
 
-  public InitiateMatchStartCountdown(Match match, Duration duration) {
+  public InitiateMatchStartCountdownEvent(Match match, Duration duration) {
     super(match);
     this.duration = duration;
   }
