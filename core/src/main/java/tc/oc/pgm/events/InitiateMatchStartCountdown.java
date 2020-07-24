@@ -1,4 +1,4 @@
-package tc.oc.pgm.start.events;
+package tc.oc.pgm.events;
 
 import java.time.Duration;
 
@@ -7,17 +7,17 @@ import org.bukkit.event.HandlerList;
 import tc.oc.pgm.api.match.Match;
 import tc.oc.pgm.api.match.event.MatchEvent;
 
-public class CancelMatchStartCountdownEvent extends MatchEvent {
+public class InitiateMatchStartCountdown extends MatchEvent {
 
-  private final Duration remaining;
+  private final Duration duration;
 
-  public CancelMatchStartCountdownEvent(Match match, Duration remaining) {
+  public InitiateMatchStartCountdown(Match match, Duration duration) {
     super(match);
-    this.remaining = remaining;
+    this.duration = duration;
   }
 
-  public Duration remaining() {
-    return remaining;
+  public Duration duration() {
+    return duration;
   }
 
   private static final HandlerList handlers = new HandlerList();

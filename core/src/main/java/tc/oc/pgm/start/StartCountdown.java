@@ -49,6 +49,7 @@ public class StartCountdown extends PreMatchCountdown {
   @Override
   public void onStart(Duration remaining, Duration total) {
     super.onStart(remaining, total);
+    Bukkit.getPluginManager().callEvent(new InitiateMatchStartCountdownEvent(match, remaining));
     this.autoBalanced = false;
   }
 
@@ -81,6 +82,12 @@ public class StartCountdown extends PreMatchCountdown {
         this.getMatch().playSound(COUNT_SOUND);
       }
     }
+  }
+
+  @Override
+  public void onCancel(Duration remaining, Duration total) {
+    super.onCancel(remaining, total);
+    Bukkit.getPluginManager().callEvent(new CancelMatchStartCountdownEvent(match, remaining));
   }
 
   @Override
