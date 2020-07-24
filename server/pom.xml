@@ -22,7 +22,7 @@
         <dependency>
             <groupId>tc.oc.pgm</groupId>
             <artifactId>core</artifactId>
-            <version>0.9-Stratus-SNAPSHOT</version>
+            <version>0.9-bolt-SNAPSHOT</version>
         </dependency>
 
         <!-- Older version of log4j logging library that barely works -->

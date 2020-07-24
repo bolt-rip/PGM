@@ -65,10 +65,11 @@
         <!-- Fork of Spigot and SportBukkit running Minecraft 1.8 -->
         <!-- TODO: support non-1.8 and non-SportPaper Bukkit servers -->
         <dependency>
-            <groupId>app.ashcon</groupId>
+            <groupId>network.stratus</groupId>
             <artifactId>sportpaper</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
-            <scope>compile</scope> <!-- Remember to exclude in shading -->
+            <scope>system</scope> <!-- Remember to exclude in shading -->
+            <systemPath>C:/Users/Administrator/Desktop/TMP/sportpaper.jar</systemPath>
         </dependency>
 
         <!-- Multi-protocol library for future Minecraft versions -->
@@ -189,5 +190,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
