@@ -35,7 +35,7 @@ public class MatchTabView extends TabView implements ListeningTabView {
     public TabView apply(Player key) {
       return ViaUtils.getProtocolVersion(key) >= ViaUtils.VERSION_1_8
           ? new MatchTabView(key)
-          : new LegacyMatchTabView(key);
+          : null;
     }
   }
 
