@@ -157,7 +157,7 @@ public class MatchTabManager extends TabManager implements Listener {
   /** Delegated events */
   @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
   public void onJoinMatch(PlayerJoinMatchEvent event) {
-    MatchTabView view = this.getViewOrNull(event.getPlayer().getBukkit());
+    MatchTabView view = this.getView(event.getPlayer().getBukkit());
     if (view != null) view.onViewerJoinMatch(event);
     invalidate(event.getPlayer());
   }
