@@ -1,9 +1,14 @@
 package tc.oc.pgm.tablist;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.TreeSet;
+import java.util.stream.StreamSupport;
+
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 import net.kyori.text.format.TextColor;
@@ -22,6 +27,7 @@ import tc.oc.pgm.api.PGM;
 import tc.oc.pgm.api.Permissions;
 import tc.oc.pgm.api.map.MapInfo;
 import tc.oc.pgm.api.match.Match;
+import tc.oc.pgm.api.match.MatchManager;
 import tc.oc.pgm.api.party.Competitor;
 import tc.oc.pgm.api.party.Party;
 import tc.oc.pgm.api.party.event.PartyRenameEvent;
@@ -39,6 +45,8 @@ import tc.oc.pgm.util.named.NameStyle;
 import tc.oc.pgm.util.tablist.TabDisplay;
 import tc.oc.pgm.util.text.TextTranslations;
 import tc.oc.pgm.util.text.types.PlayerComponent;
+
+import javax.annotation.Nullable;
 
 /** 1.7 legacy tablist implementation */
 public class LegacyMatchTabDisplay implements Listener {
@@ -82,11 +90,10 @@ public class LegacyMatchTabDisplay implements Listener {
             .runTaskTimer(
                 this.pgm,
                 () -> {
-                  Iterator<Match> matches = PGM.get().getMatchManager().getMatches();
-                  if (matches.hasNext()) {
-                    for (MatchPlayer viewer : matches.next().getPlayers()) {
-                      LegacyMatchTabDisplay.this.renderTime(viewer);
-                    }
+                  Match match = getCurrentMatch();
+                  if (match == null) return;
+                  for (MatchPlayer viewer : match.getPlayers()) {
+                    LegacyMatchTabDisplay.this.renderTime(viewer);
                   }
                 },
                 0,
@@ -152,6 +159,23 @@ public class LegacyMatchTabDisplay implements Listener {
     }
   }
 
+  /**
+   * Assume only one match runs, we get the one with the most players
+   * @return The match with most players, or null if no match exists
+   */
+  private @Nullable Match getCurrentMatch() {
+    Iterator<Match> matches = PGM.get().getMatchManager().getMatches();
+    int max = 0, currMax;
+    Match match = null, currMatch;
+    while (matches.hasNext()) {
+      if ((currMax = (currMatch = matches.next()).getPlayers().size()) > max) {
+        max = currMax;
+        match = currMatch;
+      }
+    }
+    return match;
+  }
+
   public void deferredRender() {
     if (this.deferredRenderTask != null) return;
 
@@ -164,10 +188,8 @@ public class LegacyMatchTabDisplay implements Listener {
             .runTask(
                 PGM.get(),
                 () -> {
-                  Match last = null;
-                  Iterator<Match> it = PGM.get().getMatchManager().getMatches();
-                  while (it.hasNext()) last = it.next();
-                  if (last != null) LegacyMatchTabDisplay.this.render(last);
+                  Match match = getCurrentMatch();
+                  if (match != null) LegacyMatchTabDisplay.this.render(match);
                   LegacyMatchTabDisplay.this.deferredRenderTask = null;
                 });
   }
